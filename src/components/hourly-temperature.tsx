@@ -1,35 +1,44 @@
-import { ForecastData } from "@/api/types";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
-  ResponsiveContainer,
-  Line,
   LineChart,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
+  ResponsiveContainer,
 } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { format } from "date-fns";
+import type { ForecastData } from "@/api/types";
 
 interface HourlyTemperatureProps {
   data: ForecastData;
 }
 
-const HourlyTemperature = ({ data }: HourlyTemperatureProps) => {
-  console.log(data);
+interface ChartData {
+  time: string;
+  temp: number;
+  feels_like: number;
+}
 
-  const chartData = data.list.slice(0, 8).map((item) => ({
-    time: format(new Date(item.dt * 1000), "ha"),
-    temp: Math.round(item.main.temp),
-    feels_like: Math.round(item.main.feels_like),
-  }));
+export function HourlyTemperature({ data }: HourlyTemperatureProps) {
+  // Get today's forecast data and format for chart
+
+  const chartData: ChartData[] = data.list
+    .slice(0, 8) // Get next 24 hours (3-hour intervals)
+    .map((item) => ({
+      time: format(new Date(item.dt * 1000), "ha"),
+      temp: Math.round(item.main.temp),
+      feels_like: Math.round(item.main.feels_like),
+    }));
+
   return (
     <Card className="flex-1">
       <CardHeader>
-        <CardTitle>Today's temperature</CardTitle>
+        <CardTitle>Today's Temperature</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[200px] w-full">
-          <ResponsiveContainer width={"100%"} height={"100%"}>
+          <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <XAxis
                 dataKey="time"
@@ -45,31 +54,35 @@ const HourlyTemperature = ({ data }: HourlyTemperatureProps) => {
                 axisLine={false}
                 tickFormatter={(value) => `${value}°`}
               />
-
-              {/* tooltip */}
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     return (
-                      <div>
-                        <div>
-                          <div>
-                            <span> Temperature </span>
-                            <span> {payload[0].value}°</span>
+                      <div className="rounded-lg border bg-background p-2 shadow-sm">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="flex flex-col">
+                            <span className="text-[0.70rem] uppercase text-muted-foreground">
+                              Temperature
+                            </span>
+                            <span className="font-bold">
+                              {payload[0].value}°
+                            </span>
                           </div>
-                        </div>
-                        <div>
-                          <div>
-                            <span> Feels Like </span>
-                            <span> {payload[1].value}°</span>
+                          <div className="flex flex-col">
+                            <span className="text-[0.70rem] uppercase text-muted-foreground">
+                              Feels Like
+                            </span>
+                            <span className="font-bold">
+                              {payload[1].value}°
+                            </span>
                           </div>
                         </div>
                       </div>
                     );
                   }
+                  return null;
                 }}
               />
-
               <Line
                 type="monotone"
                 dataKey="temp"
@@ -80,7 +93,7 @@ const HourlyTemperature = ({ data }: HourlyTemperatureProps) => {
               <Line
                 type="monotone"
                 dataKey="feels_like"
-                stroke="#67748b"
+                stroke="#64748b"
                 strokeWidth={2}
                 dot={false}
                 strokeDasharray="5 5"
@@ -91,6 +104,4 @@ const HourlyTemperature = ({ data }: HourlyTemperatureProps) => {
       </CardContent>
     </Card>
   );
-};
-
-export default HourlyTemperature;
+}
