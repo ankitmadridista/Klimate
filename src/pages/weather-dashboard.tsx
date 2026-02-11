@@ -1,6 +1,6 @@
 import { CurrentWeather } from "../components/CurrentWeather";
-import { Alert, AlertDescription, AlertTitle } from "../components/ui/Alert";
-import { Button } from "../components/ui/Button";
+import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
+import { Button } from "../components/ui/button";
 import { MapPin, AlertTriangle, RefreshCw } from "lucide-react";
 import { useForecastQuery, useReverseGeocodeQuery, useWeatherQuery } from "@/hooks/useWeather";
 import WeatherSkeleton from "@/components/WeatherSkeleton";

@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Toaster } from "./components/ui/Sonner";
+import { Toaster } from "./components/ui/sonner";
 import { WeatherDashboard } from "./pages/weather-dashboard";
 import { Layout } from "./components/Layout";
 import { ThemeProvider } from "./context/theme-provider";

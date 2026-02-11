@@ -11,8 +11,8 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/components/ui/Command";
-import { Button } from "@/components/ui/Button";
+} from "@/components/ui/command";
+import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/useFavorite";
 import { useLocationSearch } from "@/hooks/useWeather";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
