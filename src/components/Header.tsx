@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { CitySearch } from "./city-search";
+import { CitySearch } from "./CitySearch";
 import { useTheme } from "@/context/theme-provider";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   const { theme } = useTheme();

@@ -1,11 +1,11 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/Alert";
 import { AlertTriangle } from "lucide-react";
-import { CurrentWeather } from "../components/current-weather";
+import { CurrentWeather } from "../components/CurrentWeather";
 import { useForecastQuery, useWeatherQuery } from "@/hooks/useWeather";
-import WeatherSkeleton from "@/components/loading-skeleton";
-import { FavoriteButton } from "@/components/favorite-button";
-import { HourlyTemperature } from "@/components/hourly-temperature";
+import WeatherSkeleton from "@/components/WeatherSkeleton";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { HourlyTemperature } from "@/components/HourlyTemperature";
 import { WeatherDetails } from "@/components/WeatherDetails";
 import { WeatherForecast } from "@/components/WeatherForecast";
 
