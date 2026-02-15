@@ -14,17 +14,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const queryParams = new URLSearchParams({
-      ...params as Record<string, string>,
-      appid: API_KEY,
-    });
+    const queryParams = new URLSearchParams(params as Record<string, string>);
+    queryParams.append('appid', API_KEY);
 
-    const url = `${endpoint}?${queryParams}`;
+    const url = `${endpoint}?${queryParams.toString()}`;
     const response = await fetch(url);
+    
+    if (!response.ok) {
+      const errorData = await response.text();
+      return res.status(response.status).json({ 
+        error: 'OpenWeather API error', 
+        details: errorData 
+      });
+    }
+    
     const data = await response.json();
-
-    return res.status(response.status).json(data);
-  } catch {
-    return res.status(500).json({ error: 'Failed to fetch weather data' });
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ 
+      error: 'Failed to fetch weather data',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 }
