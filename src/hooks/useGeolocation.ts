@@ -1,15 +1,16 @@
-import { Cordinates } from "@/api/types";
-import { useEffect, useState } from "react";
 
-interface GeoLocationState {
-  cordinates: Cordinates | null;
+import { useState, useEffect } from "react";
+import type { Coordinates } from "@/api/types";
+
+interface GeolocationState {
+  coordinates: Coordinates | null;
   error: string | null;
   isLoading: boolean;
 }
 
 export function useGeolocation() {
-  const [locationData, setLocationData] = useState<GeoLocationState>({
-    cordinates: null,
+  const [locationData, setLocationData] = useState<GeolocationState>({
+    coordinates: null,
     error: null,
     isLoading: true,
   });
@@ -19,7 +20,7 @@ export function useGeolocation() {
 
     if (!navigator.geolocation) {
       setLocationData({
-        cordinates: null,
+        coordinates: null,
         error: "Geolocation is not supported by your browser",
         isLoading: false,
       });
@@ -29,7 +30,7 @@ export function useGeolocation() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLocationData({
-          cordinates: {
+          coordinates: {
             lat: position.coords.latitude,
             lon: position.coords.longitude,
           },
@@ -49,15 +50,14 @@ export function useGeolocation() {
             errorMessage = "Location information is unavailable.";
             break;
           case error.TIMEOUT:
-            errorMessage = "Location request timed out";
+            errorMessage = "Location request timed out.";
             break;
           default:
-            errorMessage = "An unknown error occured";
-            break;
+            errorMessage = "An unknown error occurred.";
         }
 
         setLocationData({
-          cordinates: null,
+          coordinates: null,
           error: errorMessage,
           isLoading: false,
         });
@@ -70,12 +70,13 @@ export function useGeolocation() {
     );
   };
 
+  // Get location on component mount
   useEffect(() => {
     getLocation();
   }, []);
 
   return {
     ...locationData,
-    getLocation,
+    getLocation, // Expose method to manually refresh location
   };
 }
