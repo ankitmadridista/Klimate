@@ -8,6 +8,14 @@ import {
 
 class WeatherAPI {
   private creatUrl(endpoint: string, params: Record<string, string | number>) {
+    if (API_CONFIG.USE_PROXY) {
+      const searchParams = new URLSearchParams({
+        endpoint,
+        ...params,
+      });
+      return `${API_CONFIG.BASE_URL}?${searchParams.toString()}`;
+    }
+    
     const searchParams = new URLSearchParams({
       appid: API_CONFIG.API_KEY,
       ...params,
