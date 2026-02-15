@@ -11,14 +11,18 @@ class WeatherAPI {
     if (API_CONFIG.USE_PROXY) {
       const searchParams = new URLSearchParams({
         endpoint,
-        ...params,
+        ...Object.fromEntries(
+          Object.entries(params).map(([k, v]) => [k, String(v)])
+        ),
       });
-      return `${API_CONFIG.BASE_URL}?${searchParams.toString()}`;
+      return `${API_CONFIG.PROXY_URL}?${searchParams.toString()}`;
     }
     
     const searchParams = new URLSearchParams({
       appid: API_CONFIG.API_KEY,
-      ...params,
+      ...Object.fromEntries(
+        Object.entries(params).map(([k, v]) => [k, String(v)])
+      ),
     });
     return `${endpoint}?${searchParams.toString()}`;
   }
@@ -34,7 +38,8 @@ class WeatherAPI {
   }
 
   async getCurrentWeather({ lat, lon }: Coordinates): Promise<WeatherData> {
-    const url = this.createUrl(`${API_CONFIG.BASE_URL}/weather`, {
+    const endpoint = `${API_CONFIG.BASE_URL}/weather`;
+    const url = this.createUrl(endpoint, {
       lat: lat.toString(),
       lon: lon.toString(),
       units: "metric",
@@ -43,7 +48,8 @@ class WeatherAPI {
   }
 
   async getForecast({ lat, lon }: Coordinates): Promise<ForecastData> {
-    const url = this.createUrl(`${API_CONFIG.BASE_URL}/forecast`, {
+    const endpoint = `${API_CONFIG.BASE_URL}/forecast`;
+    const url = this.createUrl(endpoint, {
       lat: lat.toString(),
       lon: lon.toString(),
       units: "metric",
@@ -55,7 +61,8 @@ class WeatherAPI {
     lat,
     lon,
   }: Coordinates): Promise<GeocodingResponse[]> {
-    const url = this.createUrl(`${API_CONFIG.GEO}/reverse`, {
+    const endpoint = `${API_CONFIG.GEO}/reverse`;
+    const url = this.createUrl(endpoint, {
       lat: lat.toString(),
       lon: lon.toString(),
       limit: "1",
@@ -64,7 +71,8 @@ class WeatherAPI {
   }
 
   async searchLocations(query: string): Promise<GeocodingResponse[]> {
-    const url = this.createUrl(`${API_CONFIG.GEO}/direct`, {
+    const endpoint = `${API_CONFIG.GEO}/direct`;
+    const url = this.createUrl(endpoint, {
       q: query,
       limit: "5",
     });
