@@ -55,11 +55,11 @@ export function WeatherDetails({ data, airQuality }: WeatherDetailsProps) {
   ];
 
   return (
-    <Card>
+    <Card className="flex flex-col h-full">
       <CardHeader>
         <CardTitle>Weather Details</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1">
         <div className="grid gap-6 sm:grid-cols-2">
           {details.map((detail) => (
             <div

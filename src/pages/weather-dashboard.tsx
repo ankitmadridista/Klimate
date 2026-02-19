@@ -129,7 +129,7 @@ export function WeatherDashboard() {
           <HourlyTemperature data={forecastQuery.data} />
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 items-start">
+        <div className="grid gap-6 md:grid-cols-2">
           <WeatherDetails 
             data={weatherQuery.data} 
             airQuality={airPollutionQuery.data ?? undefined}

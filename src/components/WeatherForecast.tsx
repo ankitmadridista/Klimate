@@ -63,11 +63,11 @@ export function WeatherForecast({ data, airQualityForecast }: WeatherForecastPro
   const formatTemp = (temp: number) => `${Math.round(temp)}°`;
 
   return (
-    <Card>
+    <Card className="flex flex-col h-full">
       <CardHeader>
         <CardTitle>5-Day Forecast</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1">
         <div className="grid gap-4">
           {nextDays.map((day) => (
             <div
