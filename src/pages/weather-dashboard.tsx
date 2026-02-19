@@ -2,13 +2,14 @@ import { CurrentWeather } from "../components/CurrentWeather";
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
 import { Button } from "../components/ui/button";
 import { MapPin, AlertTriangle, RefreshCw } from "lucide-react";
-import { useForecastQuery, useReverseGeocodeQuery, useWeatherQuery, useAirPollutionQuery, useAirPollutionForecastQuery } from "@/hooks/useWeather";
+import { useForecastQuery, useReverseGeocodeQuery, useWeatherQuery, useAirPollutionQuery, useAirPollutionForecastQuery, useAirPollutionHistoryQuery } from "@/hooks/useWeather";
 import WeatherSkeleton from "@/components/WeatherSkeleton";
 import { HourlyTemperature } from "@/components/HourlyTemperature";
 import { WeatherDetails } from "@/components/WeatherDetails";
 import { WeatherForecast } from "@/components/WeatherForecast";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { FavoriteCities } from "@/components/FavoriteCities";
+import { AirQualityHistory } from "@/components/AirQualityHistory";
 
 export function WeatherDashboard() {
   const {
@@ -23,6 +24,11 @@ export function WeatherDashboard() {
   const locationQuery = useReverseGeocodeQuery(coordinates);
   const airPollutionQuery = useAirPollutionQuery(coordinates);
   const airPollutionForecastQuery = useAirPollutionForecastQuery(coordinates);
+  
+  // Get last 7 days of historical data
+  const now = Math.floor(Date.now() / 1000);
+  const sevenDaysAgo = now - (7 * 24 * 60 * 60);
+  const airPollutionHistoryQuery = useAirPollutionHistoryQuery(coordinates, sevenDaysAgo, now);
 
   // Function to refresh all data
   const handleRefresh = () => {
@@ -33,6 +39,7 @@ export function WeatherDashboard() {
       locationQuery.refetch();
       airPollutionQuery.refetch();
       airPollutionForecastQuery.refetch();
+      airPollutionHistoryQuery.refetch();
     }
   };
 
@@ -132,6 +139,10 @@ export function WeatherDashboard() {
             airQualityForecast={airPollutionForecastQuery.data ?? undefined}
           />
         </div>
+
+        {airPollutionHistoryQuery.data && (
+          <AirQualityHistory data={airPollutionHistoryQuery.data} />
+        )}
       </div>
     </div>
   );

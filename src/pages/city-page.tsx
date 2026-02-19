@@ -2,12 +2,13 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { CurrentWeather } from "../components/CurrentWeather";
-import { useForecastQuery, useWeatherQuery, useAirPollutionQuery, useAirPollutionForecastQuery } from "@/hooks/useWeather";
+import { useForecastQuery, useWeatherQuery, useAirPollutionQuery, useAirPollutionForecastQuery, useAirPollutionHistoryQuery } from "@/hooks/useWeather";
 import WeatherSkeleton from "@/components/WeatherSkeleton";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { HourlyTemperature } from "@/components/HourlyTemperature";
 import { WeatherDetails } from "@/components/WeatherDetails";
 import { WeatherForecast } from "@/components/WeatherForecast";
+import { AirQualityHistory } from "@/components/AirQualityHistory";
 
 export function CityPage() {
   const [searchParams] = useSearchParams();
@@ -21,6 +22,11 @@ export function CityPage() {
   const forecastQuery = useForecastQuery(coordinates);
   const airPollutionQuery = useAirPollutionQuery(coordinates);
   const airPollutionForecastQuery = useAirPollutionForecastQuery(coordinates);
+  
+  // Get last 7 days of historical data
+  const now = Math.floor(Date.now() / 1000);
+  const sevenDaysAgo = now - (7 * 24 * 60 * 60);
+  const airPollutionHistoryQuery = useAirPollutionHistoryQuery(coordinates, sevenDaysAgo, now);
 
   if (weatherQuery.error || forecastQuery.error) {
     return (
@@ -63,6 +69,10 @@ export function CityPage() {
             airQualityForecast={airPollutionForecastQuery.data ?? undefined}
           />
         </div>
+        
+        {airPollutionHistoryQuery.data && (
+          <AirQualityHistory data={airPollutionHistoryQuery.data} />
+        )}
       </div>
     </div>
   );

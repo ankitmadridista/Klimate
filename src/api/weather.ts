@@ -97,6 +97,17 @@ class WeatherAPI {
     });
     return this.fetchData<AirPollutionData>(url);
   }
+
+  async getHistoricalAirPollution({ lat, lon }: Coordinates, start: number, end: number): Promise<AirPollutionData> {
+    const endpoint = `${API_CONFIG.BASE_URL}/air_pollution/history`;
+    const url = this.createUrl(endpoint, {
+      lat: lat.toString(),
+      lon: lon.toString(),
+      start: start.toString(),
+      end: end.toString(),
+    });
+    return this.fetchData<AirPollutionData>(url);
+  }
 }
 
 export const weatherAPI = new WeatherAPI();
