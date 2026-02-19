@@ -7,6 +7,8 @@ export const WEATHER_KEYS = {
   forecast: (coords: Coordinates) => ["forecast", coords] as const,
   location: (coords: Coordinates) => ["location", coords] as const,
   search: (query: string) => ["location-search", query] as const,
+  airPollution: (coords: Coordinates) => ["air-pollution", coords] as const,
+  airPollutionForecast: (coords: Coordinates) => ["air-pollution-forecast", coords] as const,
 } as const;
 
 export function useWeatherQuery(coordinates: Coordinates | null) {
@@ -40,5 +42,21 @@ export function useLocationSearch(query: string) {
     queryKey: WEATHER_KEYS.search(query),
     queryFn: () => weatherAPI.searchLocations(query),
     enabled: query.length >= 3,
+  });
+}
+
+export function useAirPollutionQuery(coordinates: Coordinates | null) {
+  return useQuery({
+    queryKey: WEATHER_KEYS.airPollution(coordinates ?? { lat: 0, lon: 0 }),
+    queryFn: () => coordinates ? weatherAPI.getCurrentAirPollution(coordinates) : null,
+    enabled: !!coordinates,
+  });
+}
+
+export function useAirPollutionForecastQuery(coordinates: Coordinates | null) {
+  return useQuery({
+    queryKey: WEATHER_KEYS.airPollutionForecast(coordinates ?? { lat: 0, lon: 0 }),
+    queryFn: () => coordinates ? weatherAPI.getForecastAirPollution(coordinates) : null,
+    enabled: !!coordinates,
   });
 }

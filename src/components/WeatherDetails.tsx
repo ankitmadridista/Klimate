@@ -1,13 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Sunrise, Sunset, Compass, Gauge } from "lucide-react";
 import { format } from "date-fns";
-import type { WeatherData } from "@/api/types";
+import type { WeatherData, AirPollutionData } from "@/api/types";
+import { getAQILabel, getAQIColor, getAQIBgColor } from "@/lib/aqi";
 
 interface WeatherDetailsProps {
   data: WeatherData;
+  airQuality?: AirPollutionData;
 }
 
-export function WeatherDetails({ data }: WeatherDetailsProps) {
+export function WeatherDetails({ data, airQuality }: WeatherDetailsProps) {
   const { wind, main, sys } = data;
 
   // Format time using date-fns
@@ -22,6 +24,8 @@ export function WeatherDetails({ data }: WeatherDetailsProps) {
       Math.round(((degree %= 360) < 0 ? degree + 360 : degree) / 45) % 8;
     return directions[index];
   };
+
+  const currentAQI = airQuality?.list[0];
 
   const details = [
     {
@@ -72,6 +76,36 @@ export function WeatherDetails({ data }: WeatherDetailsProps) {
             </div>
           ))}
         </div>
+
+        {currentAQI && (
+          <div className="mt-6">
+            <h3 className="text-sm font-medium mb-3">Air Quality</h3>
+            <div className="grid gap-3">
+              <div className={`flex items-center justify-between rounded-lg border p-4 ${getAQIBgColor(currentAQI.main.aqi)}`}>
+                <div>
+                  <p className="text-sm font-medium">AQI</p>
+                  <p className={`text-lg font-bold ${getAQIColor(currentAQI.main.aqi)}`}>
+                    {getAQILabel(currentAQI.main.aqi)}
+                  </p>
+                </div>
+                <div className={`text-2xl font-bold ${getAQIColor(currentAQI.main.aqi)}`}>
+                  {currentAQI.main.aqi}
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="flex items-center justify-between rounded border p-2">
+                  <span className="text-muted-foreground">PM2.5</span>
+                  <span className="font-medium">{currentAQI.components.pm2_5.toFixed(1)}</span>
+                </div>
+                <div className="flex items-center justify-between rounded border p-2">
+                  <span className="text-muted-foreground">PM10</span>
+                  <span className="font-medium">{currentAQI.components.pm10.toFixed(1)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

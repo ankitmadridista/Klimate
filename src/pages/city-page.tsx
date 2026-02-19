@@ -2,7 +2,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { CurrentWeather } from "../components/CurrentWeather";
-import { useForecastQuery, useWeatherQuery } from "@/hooks/useWeather";
+import { useForecastQuery, useWeatherQuery, useAirPollutionQuery, useAirPollutionForecastQuery } from "@/hooks/useWeather";
 import WeatherSkeleton from "@/components/WeatherSkeleton";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { HourlyTemperature } from "@/components/HourlyTemperature";
@@ -19,6 +19,8 @@ export function CityPage() {
 
   const weatherQuery = useWeatherQuery(coordinates);
   const forecastQuery = useForecastQuery(coordinates);
+  const airPollutionQuery = useAirPollutionQuery(coordinates);
+  const airPollutionForecastQuery = useAirPollutionForecastQuery(coordinates);
 
   if (weatherQuery.error || forecastQuery.error) {
     return (
@@ -52,8 +54,14 @@ export function CityPage() {
         <CurrentWeather data={weatherQuery.data} />
         <HourlyTemperature data={forecastQuery.data} />
         <div className="grid gap-6 md:grid-cols-2 items-start">
-          <WeatherDetails data={weatherQuery.data} />
-          <WeatherForecast data={forecastQuery.data} />
+          <WeatherDetails 
+            data={weatherQuery.data} 
+            airQuality={airPollutionQuery.data ?? undefined}
+          />
+          <WeatherForecast 
+            data={forecastQuery.data} 
+            airQualityForecast={airPollutionForecastQuery.data ?? undefined}
+          />
         </div>
       </div>
     </div>

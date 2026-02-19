@@ -4,6 +4,7 @@ import type {
   ForecastData,
   GeocodingResponse,
   Coordinates,
+  AirPollutionData,
 } from "./types";
 
 class WeatherAPI {
@@ -77,6 +78,24 @@ class WeatherAPI {
       limit: "5",
     });
     return this.fetchData<GeocodingResponse[]>(url);
+  }
+
+  async getCurrentAirPollution({ lat, lon }: Coordinates): Promise<AirPollutionData> {
+    const endpoint = `${API_CONFIG.BASE_URL}/air_pollution`;
+    const url = this.createUrl(endpoint, {
+      lat: lat.toString(),
+      lon: lon.toString(),
+    });
+    return this.fetchData<AirPollutionData>(url);
+  }
+
+  async getForecastAirPollution({ lat, lon }: Coordinates): Promise<AirPollutionData> {
+    const endpoint = `${API_CONFIG.BASE_URL}/air_pollution/forecast`;
+    const url = this.createUrl(endpoint, {
+      lat: lat.toString(),
+      lon: lon.toString(),
+    });
+    return this.fetchData<AirPollutionData>(url);
   }
 }
 

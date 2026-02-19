@@ -2,7 +2,7 @@ import { CurrentWeather } from "../components/CurrentWeather";
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
 import { Button } from "../components/ui/button";
 import { MapPin, AlertTriangle, RefreshCw } from "lucide-react";
-import { useForecastQuery, useReverseGeocodeQuery, useWeatherQuery } from "@/hooks/useWeather";
+import { useForecastQuery, useReverseGeocodeQuery, useWeatherQuery, useAirPollutionQuery, useAirPollutionForecastQuery } from "@/hooks/useWeather";
 import WeatherSkeleton from "@/components/WeatherSkeleton";
 import { HourlyTemperature } from "@/components/HourlyTemperature";
 import { WeatherDetails } from "@/components/WeatherDetails";
@@ -21,6 +21,8 @@ export function WeatherDashboard() {
   const weatherQuery = useWeatherQuery(coordinates);
   const forecastQuery = useForecastQuery(coordinates);
   const locationQuery = useReverseGeocodeQuery(coordinates);
+  const airPollutionQuery = useAirPollutionQuery(coordinates);
+  const airPollutionForecastQuery = useAirPollutionForecastQuery(coordinates);
 
   // Function to refresh all data
   const handleRefresh = () => {
@@ -29,6 +31,8 @@ export function WeatherDashboard() {
       weatherQuery.refetch();
       forecastQuery.refetch();
       locationQuery.refetch();
+      airPollutionQuery.refetch();
+      airPollutionForecastQuery.refetch();
     }
   };
 
@@ -119,8 +123,14 @@ export function WeatherDashboard() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 items-start">
-          <WeatherDetails data={weatherQuery.data} />
-          <WeatherForecast data={forecastQuery.data} />
+          <WeatherDetails 
+            data={weatherQuery.data} 
+            airQuality={airPollutionQuery.data ?? undefined}
+          />
+          <WeatherForecast 
+            data={forecastQuery.data} 
+            airQualityForecast={airPollutionForecastQuery.data ?? undefined}
+          />
         </div>
       </div>
     </div>
